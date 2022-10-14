@@ -238,7 +238,7 @@ class MultiResolutionDataset(Dataset):
         if self.split is not None:
 
             if "InOut" in self.config.data_params.dataset:
-                self.n_zfill = 5
+                self.n_zfill = 8
             else:
                 self.n_zfill = 8
 
@@ -370,7 +370,7 @@ class MultiResolutionDataset(Dataset):
                     img_bytes = txn.get(key)
 
                 buffer = BytesIO(img_bytes)
-                if buffer is None:
+                if img_bytes is None:
                     raise ValueError(" [!] Meet empty image while loading with key {}".format(key))
                 full_img = Image.open(buffer)
             except Exception as e:

@@ -125,6 +125,8 @@ def inference(g_ema, device, config, args):
 
 if __name__ == "__main__":
 
+    torch.hub.set_dir("/local/omp/.cache/torch")
+
     try:
 
         parser = argparse.ArgumentParser()
@@ -170,7 +172,7 @@ if __name__ == "__main__":
             args.inv_records = [
                 param for param in args.inv_records.split(":")]
             if args.inv_placements is None:
-                args.inv_placements = (0.5, 0.5)
+                args.inv_placements = [(0.5, 0.5)]
             else:
                 args.inv_placements = [
                     parse_tuple(param) for param in args.inv_placements.split(":")]
