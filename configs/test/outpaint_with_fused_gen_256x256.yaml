@@ -4,7 +4,7 @@ seed: 9487
 
 # task specific configs
 height: 256
-width: 256
+width: 512
 batch_size: 8
 num_gen: 8
 lowres_height: 128

@@ -2,6 +2,7 @@ data_params:
   dataset: "InOut-flickr"
   num_train: 34710
   num_valid: -1 
+  lmdb_root: /local/omp/data/infinityGAN-lmdb
 
 train_params:
 

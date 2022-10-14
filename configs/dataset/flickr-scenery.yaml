@@ -1,8 +1,8 @@
 data_params:
-  dataset: "flickr-scenery"
+  dataset: "InOut-flickr"
   raw_data_root: "/local/omp/infinityGAN/data/imgs_crop512"
-  num_train: 30000
-  num_valid: 30000
+  num_train: 34710
+  num_valid: -1
   lmdb_root: /local/omp/data/infinityGAN-lmdb
 
 train_params:
