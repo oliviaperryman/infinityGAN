@@ -13,6 +13,8 @@ class LatentSampler():
         is_mixing = random.random() < self.config.train_params.mixing if mixing else False
 
         latent_1 = torch.randn(batch_size, global_latent_dim, device=device)
+        # Use same global latent for all created images
+        # latent_1 = latent_1[0].repeat(batch_size, 1)
         latent_2 = torch.randn(batch_size, global_latent_dim, device=device)
         latent = torch.stack([
             latent_1,
@@ -56,6 +58,14 @@ class LatentSampler():
         else:
             z_local = torch.randn(batch_size, local_latent_dim, spatial_shape[0], spatial_shape[1], device=device)
 
+        # Use same local latents for each image
+        # z_local = z_local[0].repeat(batch_size,1,1,1)
+        # a = torch.randn(spatial_shape_ext, device=device)
+        # a = torch.randn(spatial_shape_ext, device=device)
+        # for i in range(batch_size):
+        #     for j in range(local_latent_dim):
+        #         z_local[i][j][:spatial_shape_ext[0] //2 ] += a[:spatial_shape_ext[0] //2] * i*0.5
+        # z_local = z_local[0][0].repeat(256,1,1).repeat(8,1,1,1)
         z_local.requires_grad = requires_grad
         return z_local
 

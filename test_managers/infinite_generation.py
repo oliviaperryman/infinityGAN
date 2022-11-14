@@ -44,7 +44,7 @@ class InfiniteGenerationManager(BaseTestManager):
         testing_vars = self.create_vars(inv_records=inv_records, inv_placements=inv_placements)
         self.generate(testing_vars, write_gpu_time=write_gpu_time, calc_flops=calc_flops, disable_pbar=disable_pbar)
         if save:
-            self.save_results(testing_vars.meta_img)
+            self.save_results(testing_vars.meta_img, testing_vars)
         return testing_vars.meta_img
 
     def create_vars(self, inv_records=None, inv_placements=None):
@@ -211,10 +211,14 @@ class InfiniteGenerationManager(BaseTestManager):
         self.cur_global_id += self.config.train_params.batch_size
 
     def save_testing_vars(self, testing_vars):
-        assert self.config.train_params.batch_size == 1, \
-            "This is only designed to be used with the interactive tool."
-        save_path = os.path.join(self.save_root, str(self.cur_global_id).zfill(6)+".pkl")
-        pkl.dump(testing_vars, open(save_path, "wb"))
+        # assert self.config.train_params.batch_size == 1, \
+        #     "This is only designed to be used with the interactive tool."
+        subdir = os.path.join(self.save_root,"latents")
+        if (not os.path.exists(subdir)): os.makedirs(subdir)
+        for i in range(self.config.train_params.batch_size):
+            global_id = self.cur_global_id + i
+            save_path = os.path.join(subdir, str(global_id).zfill(6)+".pkl")
+            pkl.dump(testing_vars, open(save_path, "wb"))
 
     def _wrap_feature(self, feat, wrap_size, dim):
         assert wrap_size < (feat.shape[dim] - 2*wrap_size), \

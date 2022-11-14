@@ -10,7 +10,10 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": true,
+            "env": {
+                "GOOGLE_APPLICATION_CREDENTIALS": "/local/omp/infinityGAN/api_keys/directedstudies2022-b9f6e3f912f6.json"
+            }
         },
         {
             "name": "Test invert",
@@ -70,7 +73,25 @@
                 "--model-config",
                 "./configs/model/InfinityGAN-IOF.yaml",
                 "--test-config",
-                "./configs/test/infinite_gen_1024x1024.yaml"
+                "./configs/test/infinite_gen_197x197.yaml"
+            ]
+        },
+        {
+            "name": "Test fusion",
+            "type": "python",
+            "request": "launch",
+            "program": "test.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "/local/omp/infinityGAN/src",
+                "CUDA_VISIBLE_DEVICES": "0" 
+            },
+            "args": [
+                "--model-config",
+                "./configs/model/InfinityGAN-IOF.yaml",
+                "--test-config",
+                "./configs/test/fused_gen_101x389_left_right.yaml"
             ]
         },
     ]
