@@ -124,6 +124,7 @@ def inference(g_ema, device, config, args):
 
 
 if __name__ == "__main__":
+    torch.hub.set_dir("/local/omp/.cache/torch")
 
     try:
 
