@@ -188,6 +188,11 @@ if __name__ == '__main__':
     parser.add_argument("--n_steps", type=int, default=None)
     args = parser.parse_args()
 
+    with open(args.config) as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+        config = EasyDict(config)
+    print(" [*] Config {} loaded!".format(args.config))
+
     hostname = socket.gethostname()
     cur_lmdb_root = None
     if hostname in LMDB_ROOTS:
@@ -201,15 +206,12 @@ if __name__ == '__main__':
     if not os.path.exists(cur_lmdb_root):
         os.makedirs(cur_lmdb_root)
     
-    with open(args.config) as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
-        config = EasyDict(config)
-    print(" [*] Config {} loaded!".format(args.config))
-
     if not hasattr(config.data_params, "num_valid"):
         config.data_params.num_valid = 0
 
-    img_paths = sorted(glob(os.path.join(config.data_params.raw_data_root, "*")))
+    from pathlib import Path
+    # Recursively look for images in folders
+    img_paths = sorted([path for path in Path(config.data_params.raw_data_root).rglob('*.jpg')])
     print(" [*] Make dataset `{}` at `{}`, resolution {}, num samples {} (will use {} train, {} valid)".format(
         config.data_params.dataset,
         os.path.join(config.data_params.raw_data_root, "*"),
