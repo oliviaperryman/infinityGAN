@@ -8,7 +8,7 @@ anchor_area_width: 389
 anchor_gap: 2 # Make fusion area larger than a single anchor (should accept negative values, but not tested, it also requires more style centers in the anchor_stack)
 fusion_map_pad: [0, 832] # 197 + 219, see the illustration below
 batch_size: 1 # Batch size >1 has not implemented. No motivation to do so as well, it won't speed up too much.
-num_gen: 32
+num_gen: 2
 
 blur_kernel: 255
 blur_type: "mean" # "mean" or "gaussian"

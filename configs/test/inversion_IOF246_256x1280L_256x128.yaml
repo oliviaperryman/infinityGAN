@@ -6,7 +6,7 @@ override_dataset_data_size: 256
 override_dataset_full_size: 256
 
 # task specific configs
-data_split: "test"
+data_split: "train"
 height: 256 # The inversion area, encourage but do not need to equal to target image
 width: 128
 inv_region: [0, 128, 256, 256] # (xst, yst, xed, yed)

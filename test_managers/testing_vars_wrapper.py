@@ -200,12 +200,28 @@ class TestingVars():
                 style[:, 0:1, :].repeat(1, n_latent, 1) for style in self.styles]
 
         assert_global_idx = []
+
+        def testing_var_to_inv_record(testing_var,n):
+            inv_record = {}
+            inv_record["ss_local_latents"] = testing_var.local_latent[n%8]
+            inv_record["ss_global_latents"] = testing_var.global_latent[n%8]
+            noises = []
+            for noise in testing_var.noises:
+                noises.append(noise[n%8])
+            inv_record["ts_noises"] = noises
+            return inv_record
+
         for nth_center, (path,loc) in enumerate(zip(inv_records,inv_placements)):
             if path is None:
                 # This happens when the number of `inv_records` is less than the number of `style_centers`
                 break
 
-            inv_record_obj = pkl.load(open(path, "rb"))["latents"]
+            if False: # For using saved testing vars instead of inverting
+                import os
+                n = int(os.path.splitext(os.path.basename(path))[0])
+                inv_record_obj = testing_var_to_inv_record(pkl.load(open(path, "rb")),n)
+            else:
+                inv_record_obj = pkl.load(open(path, "rb"))["latents"]
             # keys in records:
             # {
             #    "eval": {...}, # Irrelavent metrics
@@ -245,7 +261,10 @@ class TestingVars():
                 inv_img_center_loc_ratio = loc
 
             if hasattr(self, "styles") and (self.styles is not None):
-                self.wplus_styles[closest_idx] = inv_record_obj["ts_styles"]
+                pass
+                # Throws error when using saved testing vars
+                # self.wplus_styles[closest_idx] = inv_record_obj["ts_styles"]
+                # self.wplus_styles[closest_idx] = self.styles[closest_idx]
             elif "ts_styles" in inv_record_obj:
                 # Single style generation, like infinite generation
                 assert len(inv_records) == 1
@@ -294,9 +313,9 @@ class TestingVars():
 
             # Safety check if the placement is correctly set
             # import pdb; pdb.set_trace()
-            self._assert_coords_by_pin_loc(
-                self.meta_coords, inv_record_obj["coords"], pin_loc_z_local, 
-                g_ema_module=g_ema_module)
+            # self._assert_coords_by_pin_loc(
+            #     self.meta_coords, inv_record_obj["coords"], pin_loc_z_local, 
+            #     g_ema_module=g_ema_module)
 
             # Assign z_local
             self._assign_by_pin_loc(self.local_latent, inv_record_obj["ss_local_latents"], pin_loc_z_local)

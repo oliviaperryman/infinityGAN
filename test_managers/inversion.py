@@ -6,7 +6,7 @@ from numpy.linalg import inv
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from copy import deepcopy
-from tensorboardX import SummaryWriter
+# from tensorboardX import SummaryWriter
 
 import torch
 import torch.nn.functional as F
@@ -24,6 +24,10 @@ from test_managers.global_config import test_meta_extra_pad
 
 pix_dist_metric = l2_loss
 
+def read_saved_img(n):
+    img = open(f"/local/omp/infinityGAN/logs/InfinityGAN-IOF/test/infinite_gen_197x197_dataset/{n}.png", "rb")
+    # img = 
+    return img
 
 def extract_training_params(g_ema, inject_randomness=False):
     params = []
@@ -164,7 +168,7 @@ class InversionManager(BaseTestManager):
             if (not os.path.exists(self.log_dir)):
                 os.makedirs(self.log_dir)
 
-            self.writer = SummaryWriter(self.log_dir)
+            # self.writer = SummaryWriter(self.log_dir)
         else:
             self.writer = None
 

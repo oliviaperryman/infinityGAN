@@ -131,6 +131,16 @@ class FusedSeqConnectingGenerationManager(BaseTestManager):
         return cur_output
 
     def create_vars(self, cur_anchor_idx):
+
+        # anchor_dict = {
+        #     -1: "000083",
+        #     0: "000089",
+        #     1: "000083",
+        #     2: "000039"
+        # }
+        # anchor_dict = {0:"000045", 1: "000083"}
+        # saved_img_number = anchor_dict.get(cur_anchor_idx %2, None)
+        saved_img_number = None
         
         mixing = False
         assert mixing == False, "Otherwise, an injection index must be specified and fed into g_ema."
@@ -140,7 +150,7 @@ class FusedSeqConnectingGenerationManager(BaseTestManager):
         meta_img = None # No need to create
 
         global_latent = self.latent_sampler.sample_global_latent(
-            self.config.task.batch_size, mixing=mixing, device=self.device)
+            self.config.task.batch_size, mixing=mixing, device=self.device, saved_img_number=saved_img_number)
         ts_style = self.g_ema(
             call_internal_method="get_style", 
             internal_method_kwargs={"global_latent": global_latent})
@@ -159,7 +169,8 @@ class FusedSeqConnectingGenerationManager(BaseTestManager):
         local_latent = self.latent_sampler.sample_local_latent(
             self.config.task.batch_size, 
             device="cpu", # Store in CPU anyway, it can be INFINITLY LARGE!
-            specific_shape=self.local_latent_shape_single)
+            specific_shape=self.local_latent_shape_single,
+             saved_img_number=saved_img_number)
         meta_coords = self.coord_handler.sample_coord_grid(
             spatial_latent=None,
             specific_shape=coord_shape, 

@@ -100,7 +100,7 @@ def inference(g_ema, device, config, args):
             else:
                 task_manager.run_next(
                     save=True, write_gpu_time=False,
-                    inv_records=args.inv_records, inv_placements=args.inv_placements)
+                    inv_records=args.inv_records, inv_placements=args.inv_placements, saved_img_number="000083")
         if args.debug:
             task_manager.exit()
             exit()
