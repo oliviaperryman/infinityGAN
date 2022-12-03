@@ -100,7 +100,7 @@ def inference(g_ema, device, config, args):
             else:
                 task_manager.run_next(
                     save=True, write_gpu_time=False,
-                    inv_records=args.inv_records, inv_placements=args.inv_placements)
+                    inv_records=args.inv_records, inv_placements=args.inv_placements, saved_img_number="000083")
         if args.debug:
             task_manager.exit()
             exit()
@@ -124,6 +124,8 @@ def inference(g_ema, device, config, args):
 
 
 if __name__ == "__main__":
+
+    torch.hub.set_dir("/local/omp/.cache/torch")
 
     try:
 
@@ -170,7 +172,7 @@ if __name__ == "__main__":
             args.inv_records = [
                 param for param in args.inv_records.split(":")]
             if args.inv_placements is None:
-                args.inv_placements = (0.5, 0.5)
+                args.inv_placements = [(0.5, 0.5)]
             else:
                 args.inv_placements = [
                     parse_tuple(param) for param in args.inv_placements.split(":")]

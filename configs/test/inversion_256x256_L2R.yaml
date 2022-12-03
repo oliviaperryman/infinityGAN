@@ -6,13 +6,13 @@ override_dataset_data_size: 256
 override_dataset_full_size: 256
 
 # task specific configs
-data_split: "test"
+data_split: "train"
 inv_mode: "l2r" # choices: ["l2r", "r2l", "u2b", "b2u", "center"]
 height: 256 # The inversion area, encourage but do not need to equal to target image
 width: 256
 num_gen: 1
 batch_size: 1
-init_index: 0 # starting point of the data sampler, round back to 0-th sample after reached end
+init_index: 100 # starting point of the data sampler, round back to 0-th sample after reached end
 lowres_height: 128
 
 losses_weights:
@@ -45,7 +45,7 @@ rand_ss_local_perturb_ramp: 0.75
 rand_ss_local_perturb: 0.2
 
 
-future_resolution: [256, 256]
+future_resolution: [256, 512]
 future_placement: [0.5, 0.5] # center
 
 # logging

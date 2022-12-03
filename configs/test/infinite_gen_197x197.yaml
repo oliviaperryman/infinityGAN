@@ -6,6 +6,6 @@ seed: 9487
 height: 197
 width: 197
 batch_size: 8
-num_gen: 64
+num_gen: 8
 lowres_height: 128
 

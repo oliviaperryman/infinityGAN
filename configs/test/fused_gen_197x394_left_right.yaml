@@ -3,15 +3,22 @@ interactive: False
 seed: 9487
 
 # task specific configs
-height: 256
-width: 512
+height: 197
+width: 394
 batch_size: 8
 num_gen: 8
 lowres_height: 128
 
-blur_kernel: 65
+blur_kernel: 130
 blur_type: "mean" # "mean" or "gaussian"
 
 style_centers:
-  - [0.5, 0.5]
+  # # Looking like this
+  # X X X X X X X X X
+  # X X[O]X X X X X X
+  # X X X X X X X X X
+  # X X X X X X[O]X X
+  # X X X X X X X X X
+  - [0.5, 0.1]
+  - [0.5, 0.9]
   

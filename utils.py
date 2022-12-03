@@ -15,7 +15,7 @@ from PIL import Image, ImageFont, ImageDraw
 from tqdm import tqdm
 from glob import glob
 # from easydict import EasyDict
-from tensorboardX import SummaryWriter
+# from tensorboardX import SummaryWriter
 
 import torch
 from torch import nn, autograd, optim

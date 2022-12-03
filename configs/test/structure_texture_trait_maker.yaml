@@ -1,0 +1,28 @@
+task_manager: "test_managers.structure_texture_trait_maker.StructureTextureTraitMaker"
+is_trait_figure: True
+interactive: False
+seed: 9487
+
+# task specific configs
+height: 197
+width: 197
+batch_size: 1
+parallel_batch_size: 16
+lowres_height: 128
+
+n_trait_x: 4
+n_trait_y: 6
+num_gen: 1 # Auto-set later
+trait_x: "styles"
+trait_y: "local_latent"
+
+random_reset_x: [ 0,  1,  2,  3]
+reset_seed_x:   [20, 25, 19, 15]
+
+random_reset_y: [  0,   1,   2,   3,   4,  5]
+reset_seed_y:   [111, 110, 107, 130, 112, 96]
+# 95, 122, 133
+
+# Panorama generation
+pano_mode: False
+allow_elastic_coord: False

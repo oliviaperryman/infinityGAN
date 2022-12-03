@@ -36,18 +36,18 @@ class InfiniteGenerationManager(BaseTestManager):
         else:
             self.gen_from_inv_stats = False
 
-    def run_next(self, save=True, write_gpu_time=False, inv_records=None, inv_placements=None, calc_flops=False, disable_pbar=False, **kwargs):
+    def run_next(self, save=True, write_gpu_time=False, inv_records=None, inv_placements=None, calc_flops=False, disable_pbar=False, saved_img_number=None, **kwargs):
         if len(kwargs) > 0:
             for k,v in kwargs.items():
                 if v is not None:
                     print(" [Warning] task manager receives untracked arg {} with value {}".format(k ,v))
-        testing_vars = self.create_vars(inv_records=inv_records, inv_placements=inv_placements)
+        testing_vars = self.create_vars(inv_records=inv_records, inv_placements=inv_placements, saved_img_number=saved_img_number)
         self.generate(testing_vars, write_gpu_time=write_gpu_time, calc_flops=calc_flops, disable_pbar=disable_pbar)
         if save:
-            self.save_results(testing_vars.meta_img)
+            self.save_results(testing_vars.meta_img, testing_vars)
         return testing_vars.meta_img
 
-    def create_vars(self, inv_records=None, inv_placements=None):
+    def create_vars(self, inv_records=None, inv_placements=None, saved_img_number=None):
         mixing = False
         assert mixing == False, "Otherwise, an injection index must be specified and fed into g_ema."
 
@@ -65,7 +65,7 @@ class InfiniteGenerationManager(BaseTestManager):
         #     during the inference. However, the author is just lazy and abusing his 
         #     CPU memory OuO
         global_latent = self.latent_sampler.sample_global_latent(
-            self.config.train_params.batch_size, mixing=mixing, device=self.device)
+            self.config.train_params.batch_size, mixing=mixing, device=self.device, saved_img_number=saved_img_number)
         full_local_latent_shape = (
             # Does not account GNN padding here, it is handled within the latent_sampler
             int(self.g_ema_module.calc_in_spatial_size(self.meta_height, include_ss=False)),
@@ -74,7 +74,8 @@ class InfiniteGenerationManager(BaseTestManager):
         local_latent = self.latent_sampler.sample_local_latent(
             self.config.train_params.batch_size, 
             device="cpu", # Store in CPU anyway, it can be INFINITLY LARGE!
-            specific_shape=full_local_latent_shape)
+            specific_shape=full_local_latent_shape,
+            saved_img_number=saved_img_number)
 
         meta_coords = self.coord_handler.sample_coord_grid(
             local_latent, 
@@ -211,10 +212,14 @@ class InfiniteGenerationManager(BaseTestManager):
         self.cur_global_id += self.config.train_params.batch_size
 
     def save_testing_vars(self, testing_vars):
-        assert self.config.train_params.batch_size == 1, \
-            "This is only designed to be used with the interactive tool."
-        save_path = os.path.join(self.save_root, str(self.cur_global_id).zfill(6)+".pkl")
-        pkl.dump(testing_vars, open(save_path, "wb"))
+        # assert self.config.train_params.batch_size == 1, \
+        #     "This is only designed to be used with the interactive tool."
+        subdir = os.path.join(self.save_root,"latents")
+        if (not os.path.exists(subdir)): os.makedirs(subdir)
+        for i in range(self.config.train_params.batch_size):
+            global_id = self.cur_global_id + i
+            save_path = os.path.join(subdir, str(global_id).zfill(6)+".pkl")
+            pkl.dump(testing_vars, open(save_path, "wb"))
 
     def _wrap_feature(self, feat, wrap_size, dim):
         assert wrap_size < (feat.shape[dim] - 2*wrap_size), \
