@@ -6,7 +6,7 @@ from numpy.linalg import inv
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from copy import deepcopy
-from tensorboardX import SummaryWriter
+# from tensorboardX import SummaryWriter
 
 import torch
 import torch.nn.functional as F
@@ -164,7 +164,7 @@ class InversionManager(BaseTestManager):
             if (not os.path.exists(self.log_dir)):
                 os.makedirs(self.log_dir)
 
-            self.writer = SummaryWriter(self.log_dir)
+            # self.writer = SummaryWriter(self.log_dir)
         else:
             self.writer = None
 
